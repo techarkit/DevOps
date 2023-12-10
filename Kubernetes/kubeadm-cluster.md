@@ -216,7 +216,7 @@ Run these commands only on the VM designated as the controller (master) node.
         ```
         kubeadm init --apiserver-advertise-address=<ControllerVM-PrivateIP> --pod-network-cidr=10.244.0.0/16 
         ```
-    1.
+    1. Exit the sudo mode
         ```
         exit
         ```
@@ -241,10 +241,6 @@ Run these commands only on the VM designated as the controller (master) node.
     1. 
         ```
         kubeadm token create --print-join-command
-        ```
-        ```    
-        (SAMPLE OUTPUT - DO NOT USE)
-        kubeadm join <MasterNodeIP>:6443 --token <TOCKEN VALUE> --discovery-token-ca-cert-hash <HASH VALUE>
         ```
 ## Part C - Worker Nodes ONLY
 
