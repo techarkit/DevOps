@@ -1,4 +1,4 @@
-# A 3-Node Kubernetes Cluster Setup
+# 3-Node Production Like Kubernetes Cluster Setup
 
 - [Cluster Setup Video](https://www.youtube.com/techarkit)
 
