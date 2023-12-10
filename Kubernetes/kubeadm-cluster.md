@@ -109,7 +109,7 @@
             sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
             ```
         1. Make daemon file for docker to aviod service errors later
-            ```
+        ```
             sudo mkdir /etc/docker
             cat <<EOF | sudo tee /etc/docker/daemon.json
             {
@@ -117,15 +117,15 @@
               "log-driver": "json-file",
               "log-opts": {
               "max-size": "100m"
-          },
+              },
               "storage-driver": "overlay2"
-          }
-          EOF
+              }
+              EOF
        
           sudo systemctl enable docker
           sudo systemctl daemon-reload
           sudo systemctl restart docker
-            ```
+        ```
         1. Confirm that Docker Engine installation is successful by running the `hello-world` image:
             ```
             sudo docker run hello-world
