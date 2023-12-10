@@ -63,8 +63,10 @@
     1. Verify that the `net.bridge.bridge-nf-call-iptables`, `net.bridge.bridge-nf-call-ip6tables`, and `net.ipv4.ip_forward` system variables are set to 1 in your `sysctl` config by running the following command:
         ```
         sysctl net.bridge.bridge-nf-call-iptables net.bridge.bridge-nf-call-ip6tables net.ipv4.ip_forward
-
+        ```
+        
         **Output**
+       ```
         net.bridge.bridge-nf-call-iptables = 1
         net.bridge.bridge-nf-call-ip6tables = 1
         net.ipv4.ip_forward = 1
