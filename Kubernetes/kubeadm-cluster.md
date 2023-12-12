@@ -1,6 +1,6 @@
 # 3-Node Production Like Kubernetes Cluster Setup
 
-- [Cluster Setup Video](https://www.youtube.com/techarkit)
+- [Cluster Setup Video](https://youtu.be/e4NY6a-TgyE)
 
 ## Prerequisites 
 
