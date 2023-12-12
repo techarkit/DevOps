@@ -122,9 +122,9 @@
               }
               EOF
        
-          sudo systemctl enable docker
-          sudo systemctl daemon-reload
-          sudo systemctl restart docker
+            sudo systemctl enable docker
+            sudo systemctl daemon-reload
+            sudo systemctl restart docker
         ```
         1. Confirm that Docker Engine installation is successful by running the `hello-world` image:
             ```
