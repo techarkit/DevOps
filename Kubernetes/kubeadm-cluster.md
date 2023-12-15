@@ -133,8 +133,7 @@
         1. Switch-off the swap in all the nodes
             ```
             sudo swapoff -a
-            vi /etc/fstab
-            # comment SWAP entry
+            sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
             ```            
     1. Configure the `containerd` runtime environment.
 
