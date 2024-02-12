@@ -26,12 +26,25 @@
 
     - name: Copy website files to nginx server
       synchronize:
-        src: /tmp/website/index.html
-        dest: /usr/share/nginx/html/
+        src: /tmp/website/
+        dest: /var/www/html/
       when: "'nginx' in inventory_hostname"
+      notify: Restart Nginx
 
     - name: Copy website files to apache server
       synchronize:
-        src: /tmp/website/index.html
+        src: /tmp/website/
         dest: /var/www/html/
       when: "'apache' in inventory_hostname"
+      notify: Restart Apache
+
+  handlers:
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
+
+    - name: Restart Apache
+      service:
+        name: apache2
+        state: restarted        
