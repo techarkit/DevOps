@@ -1,0 +1,37 @@
+---
+- name: Clone website repository
+  hosts: ansible-master
+  become: yes
+  tasks:
+    - name: Clone website repository
+      git:
+        repo: https://github.com/Sameer-8080/Website-PRT-ORG.git
+        dest: /tmp/website
+
+- name: Install and configure web servers
+  hosts: nginx:apache
+  become: yes
+  tasks:
+    - name: Install nginx on nginx server
+      apt:
+        name: nginx
+        state: present
+      when: "'nginx' in inventory_hostname"
+
+    - name: Install apache2 on apache server
+      apt:
+        name: apache2
+        state: present
+      when: "'apache' in inventory_hostname"
+
+    - name: Copy website files to nginx server
+      synchronize:
+        src: /tmp/website/index.html
+        dest: /usr/share/nginx/html/
+      when: "'nginx' in inventory_hostname"
+
+    - name: Copy website files to apache server
+      synchronize:
+        src: /tmp/website/index.html
+        dest: /var/www/html/
+      when: "'apache' in inventory_hostname"
