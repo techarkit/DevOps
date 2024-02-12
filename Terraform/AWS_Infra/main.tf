@@ -38,4 +38,8 @@ resource "aws_instance" "public_vm" {
   instance_type = "t2.micro"
   subnet_id     = aws_subnet.public_subnet.id
   key_name      = "CHANGE_KEY_PAIR"
+  
+   tags = {
+     Name = "PublicVM-${count.index + 1}"
+  }
 }
