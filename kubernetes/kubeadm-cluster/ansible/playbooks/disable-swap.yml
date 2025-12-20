@@ -1,0 +1,21 @@
+---
+- name: Disable swap on multiple Ubuntu machines
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Disable swap immediately
+      ansible.builtin.command: swapoff -a
+      when: ansible_swaptotal_mb > 0
+
+    - name: Remove swap entry from /etc/fstab
+      ansible.builtin.replace:
+        path: /etc/fstab
+        regexp: '^(\S+\s+\S+\s+swap\s+.*)$'
+        replace: '# \1'
+
+    - name: Ensure swapfile is absent (optional)
+      ansible.builtin.file:
+        path: /swapfile
+        state: absent
+      ignore_errors: true

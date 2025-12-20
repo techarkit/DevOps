@@ -1,0 +1,6 @@
+---
+- name: Install Kubeadm
+  hosts: all   # or "all"
+  become: yes
+  roles:
+    - kubeadm

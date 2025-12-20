@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment    # Deployment ensures Pod(s) are running and replicated
+metadata:
+  name: grafana    # Name of the deployment
+  namespace: monitoring    # Namespace where deployment will be created
+spec:
+  replicas: 1    # Single replica as we're using local storage
+  selector:
+    matchLabels:
+      app: grafana    # Label selector for finding pods to manage
+  template:
+    metadata:
+      labels:
+        app: grafana    # Pod label that matches selector above
+    spec:
+      securityContext:    # Security settings for the pod
+        fsGroup: 472    # Grafana recommended filesystem group
+        supplementalGroups:
+          - 0    # Additional group permissions
+      containers:
+      - name: grafana    # Container name
+        image: grafana/grafana:9.5.3    # Official Grafana image
+        ports:
+        - containerPort: 3000    # Default Grafana web interface port
+          name: http    # Named port for service reference
+        volumeMounts:
+        - name: grafana-storage    # Mount persistent storage
+          mountPath: /var/lib/grafana    # Default Grafana storage location
+        env:    # Environment variables for container
+        - name: GF_SECURITY_ADMIN_USER     # Default admin username
+          value: admin    # Should be changed in production
+        - name: GF_SECURITY_ADMIN_PASSWORD # Default admin password
+          value: admin    # Should be changed in production
+        resources:    # Resource limits and requests
+          limits:    # Maximum resources the container can use
+            memory: 1Gi
+            cpu: 1000m    # 1000m = 1 CPU core
+          requests:    # Minimum resources the container needs
+            memory: 500Mi
+            cpu: 500m    # 500m = 0.5 CPU core
+      volumes:    # Volume definitions used by volumeMounts
+      - name: grafana-storage    # Persistent storage for Grafana data
+        persistentVolumeClaim:
+          claimName: grafana-pvc    # Reference to PVC

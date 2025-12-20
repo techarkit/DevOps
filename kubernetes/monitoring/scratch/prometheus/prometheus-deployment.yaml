@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment    # Deployment ensures Pod(s) are running and replicated
+metadata:
+  name: prometheus    # Name of the deployment
+  namespace: monitoring    # Namespace where deployment will be created
+spec:
+  replicas: 1    # Single replica as we're using persistent storage
+  selector:
+    matchLabels:
+      app: prometheus    # Label selector for finding pods to manage
+  template:
+    metadata:
+      labels:
+        app: prometheus    # Pod label that matches selector above
+    spec:
+      containers:
+      - name: prometheus    # Container name
+        image: prom/prometheus:v2.45.0    # Official Prometheus image
+        resources:    # Resource limits and requests
+          limits:    # Maximum resources the container can use
+            memory: 2Gi
+            cpu: 1000m    # 1000m = 1 CPU core
+          requests:    # Minimum resources the container needs
+            memory: 1Gi
+            cpu: 500m    # 500m = 0.5 CPU core
+        ports:
+        - containerPort: 9090    # Default Prometheus web interface port
+        volumeMounts:    # Mount points for volumes inside container
+        - name: prometheus-config    # Main Prometheus configuration
+          mountPath: /etc/prometheus/
+        - name: prometheus-storage    # Persistent storage for metrics data
+          mountPath: /prometheus/
+        - name: prometheus-rules    # Alerting rules configuration
+          mountPath: /etc/prometheus/rules/
+      volumes:    # Volume definitions used by volumeMounts
+      - name: prometheus-config    # ConfigMap containing prometheus.yml
+        configMap:
+          name: prometheus-config
+      - name: prometheus-storage    # Persistent storage for metric data
+        persistentVolumeClaim:
+          claimName: prometheus-pvc
+      - name: prometheus-rules    # ConfigMap containing alerting rules
+        configMap:
+          name: prometheus-node-alerts
+      - name: prometheus-recording-rules    # ConfigMap containing recording rules
+        configMap:
+          name: prometheus-recording-rules

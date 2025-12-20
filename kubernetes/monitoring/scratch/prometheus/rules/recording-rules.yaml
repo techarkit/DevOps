@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-recording-rules
+  namespace: monitoring
+data:
+  recording-rules.yml: |
+    groups:
+    - name: kubernetes-resources
+      rules:
+      - record: node_memory_utilization
+        expr: 100 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100)
+
+      - record: node_cpu_utilization
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
+
+      - record: pod_cpu_utilization
+        expr: sum(rate(container_cpu_usage_seconds_total{container!=""}[5m])) by (pod, namespace)
+
+      - record: pod_memory_utilization
+        expr: sum(container_memory_working_set_bytes{container!=""}) by (pod, namespace)

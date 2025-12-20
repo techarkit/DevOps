@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alertmanager       # Deployment name
+  namespace: monitoring    # Kubernetes namespace
+spec:
+  replicas: 1             # Single replica for simplicity
+  selector:
+    matchLabels:
+      app: alertmanager   # Pod selector
+  template:
+    metadata:
+      labels:
+        app: alertmanager # Pod label
+    spec:
+      containers:
+      - name: alertmanager
+        image: prom/alertmanager:v0.25.0  # Official AlertManager image
+        args:
+        - "--config.file=/etc/alertmanager/alertmanager.yml"  # Config file path
+        - "--storage.path=/alertmanager"                      # Data storage path
+        ports:
+        - containerPort: 9093    # AlertManager web interface port
+          name: alertmanager
+        volumeMounts:
+        - name: alertmanager-config    # Mount config from ConfigMap
+          mountPath: /etc/alertmanager
+        - name: alertmanager-storage   # Mount storage for alert state
+          mountPath: /alertmanager
+        resources:                # Resource limits
+          requests:               # Minimum resources needed
+            cpu: 100m            # 0.1 CPU core
+            memory: 256Mi        # 256MB memory
+          limits:                # Maximum resources allowed
+            cpu: 200m            # 0.2 CPU core
+            memory: 512Mi        # 512MB memory
+      volumes:
+      - name: alertmanager-config    # ConfigMap volume for configuration
+        configMap:
+          name: alertmanager-config
+      - name: alertmanager-storage   # Temporary storage (lost on pod restart)
+        emptyDir: {}                 # Could be replaced with PVC for persistence

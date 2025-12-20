@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-storage-alerts
+  namespace: monitoring
+data:
+  storage-alerts.yml: |
+    groups:
+    - name: storage
+      rules:
+      - alert: HighStorageUsage
+        expr: |
+          (kubelet_volume_stats_used_bytes / kubelet_volume_stats_capacity_bytes) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High storage usage on PVC
+          description: PVC {{ $labels.persistentvolumeclaim }} is using more than 80% of its capacity
+      - alert: CriticalStorageUsage
+        expr: |
+          (kubelet_volume_stats_used_bytes / kubelet_volume_stats_capacity_bytes) * 100 > 90
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: Critical storage usage on PVC
+          description: PVC {{ $labels.persistentvolumeclaim }} is using more than 90% of its capacity

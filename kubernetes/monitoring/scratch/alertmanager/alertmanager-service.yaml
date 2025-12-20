@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: alertmanager        # Service name used by Prometheus to send alerts
+  namespace: monitoring     # Kubernetes namespace
+spec:
+  type: NodePort           # Make service accessible outside cluster
+  ports:
+  - port: 9093            # Standard AlertManager port
+    targetPort: 9093      # Port in the AlertManager container
+    nodePort: 30093       # External access port
+    protocol: TCP         # Network protocol
+    name: alertmanager    # Port name for reference
+  selector:
+    app: alertmanager     # Match pods with this label

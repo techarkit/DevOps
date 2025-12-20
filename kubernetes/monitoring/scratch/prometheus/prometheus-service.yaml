@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus         # Service name used by Grafana
+  namespace: monitoring    # Kubernetes namespace
+  labels:
+    app: prometheus       # Service label
+spec:
+  type: NodePort         # Make Prometheus accessible from outside
+  ports:
+  - port: 9090          # Standard Prometheus port
+    targetPort: 9090    # Container port
+    nodePort: 30090     # External access port
+    protocol: TCP       # Network protocol
+    name: http         # Port name
+  selector:
+    app: prometheus    # Select Prometheus pods

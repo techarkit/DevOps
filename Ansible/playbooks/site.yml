@@ -1,0 +1,14 @@
+---
+
+
+- hosts: all
+  become: yes
+  tasks:
+    - name: Install VLC media player
+      apt:
+        name: vlc
+        state: present
+      when: ansible_os_family == 'Debian'
+
+
+

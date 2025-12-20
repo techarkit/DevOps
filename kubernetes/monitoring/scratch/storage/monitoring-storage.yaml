@@ -1,0 +1,30 @@
+# PVC for Prometheus - stores metrics data and time series database
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prometheus-pvc
+  namespace: monitoring  # Namespace where PVC will be created
+spec:
+  accessModes:
+    - ReadWriteOnce    # Can be mounted as read-write by a single node
+  resources:
+    requests:
+      storage: 10Gi    # Request 10GB of storage space
+  # storageClassName: local-path  # Using Rancher's local-path provisioner
+  storageClassName: standard  # Using default storage class in k3s
+
+---
+# PVC for Grafana - stores dashboards, users, and other configurations
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-pvc
+  namespace: monitoring
+spec:
+  accessModes:
+    - ReadWriteOnce    # Can be mounted as read-write by a single node
+  resources:
+    requests:
+      storage: 5Gi     # Request 5GB of storage space
+  # storageClassName: local-path  # Using Rancher's local-path provisioner
+  storageClassName: standard  # Using default storage class in k3s

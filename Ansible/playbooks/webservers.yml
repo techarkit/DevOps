@@ -1,0 +1,9 @@
+---
+- hosts: webservers
+  become: yes
+  tasks:
+    - name: Ensure nginx is installed
+      apt:
+        name: nginx
+        state: present
+      when: ansible_os_family == 'Debian'

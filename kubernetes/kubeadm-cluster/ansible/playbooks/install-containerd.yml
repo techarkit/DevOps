@@ -1,0 +1,6 @@
+---
+- name: Install and configure containerd
+  hosts: all   # or "all"
+  become: yes
+  roles:
+    - containerd

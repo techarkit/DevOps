@@ -1,0 +1,4 @@
+[webservers]
+
+server3 ansible_host=192.168.1.4 ansible_user=user3
+server5 ansible_host=192.168.1.6 ansible_user=hassan

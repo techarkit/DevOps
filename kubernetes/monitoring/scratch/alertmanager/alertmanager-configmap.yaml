@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-config
+  namespace: monitoring
+data:
+  alertmanager.yml: |
+    # Global configuration
+    global:
+      resolve_timeout: 5m    # Time to wait before resolving an alert
+
+    # Main routing tree configuration
+    route:
+      group_by: ['job', 'alertname', 'severity']    # Group alerts by these labels
+      group_wait: 30s        # Wait 30s to send a group of similar alerts
+      group_interval: 5m     # Wait 5m before sending an updated notification
+      repeat_interval: 12h   # Wait 12h before repeating the same alert
+      receiver: 'email'      # Default receiver
+      routes:
+      - match:
+          severity: critical    # Route critical alerts
+        receiver: 'slack'
+        continue: true         # Continue matching other routes
+
+    # Alert receivers configuration
+    receivers:
+    - name: 'email'    # Email receiver configuration
+      email_configs:
+      - to: 'your-email@example.com'
+        from: 'alertmanager@example.com'
+        smarthost: 'smtp.example.com:587'
+        auth_username: 'your-username'
+        auth_password: 'your-password'
+
+    - name: 'slack'    # Slack receiver configuration
+      slack_configs:
+      - api_url: 'https://hooks.slack.com/services/YOUR-WEBHOOK-URL'
+        channel: '#alerts'
+        text: '{{ template "slack.default.text" . }}'
+
+    # Alert suppression rules
+    inhibit_rules:
+      - source_match:           # Suppress warning alerts
+          severity: 'critical'  # if there is already a critical alert
+        target_match:
+          severity: 'warning'
+        equal: ['alertname', 'namespace']  # Match these labels
